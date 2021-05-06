@@ -1,1 +1,2 @@
-# Requirement module folder.
+requests
+beautifulsoup4
