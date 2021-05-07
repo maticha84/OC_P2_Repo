@@ -60,6 +60,12 @@ def rech_info_page(soup):
     Category
     <a href="../category/books/fantasy_19/index.html">Fantasy</a>
     """
+    aaa = soup.findAll('a')
+    for a in aaa:
+        ref = a['href']
+        rech = re.search('../category/books/', ref)
+        if not rech == None:
+            category = a.text
     """
     Image_url
     <img src="../../media/cache/8e/5a/8e5a6639c7e2f9b59ff15f04a3b055e1.jpg" alt="Eragon (The Inheritance Cycle #1)">
@@ -69,19 +75,19 @@ def rech_info_page(soup):
     """
     product_page_url = url
     return title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
-           number_available, review_rating
+           number_available, review_rating, category
     # print(product_page_url)
 
 
 if __name__ == '__main__':
-    url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
-
+    #url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
+    url = input('url : ')
     response = requests.get(url)
 
     if response.ok:
         soup = BeautifulSoup(response.text, "html.parser")
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
-        review_rating = rech_info_page(soup)
+        review_rating, category  = rech_info_page(soup)
         print(title)
         print(product_description)
         print(universal_product_code)
@@ -89,3 +95,4 @@ if __name__ == '__main__':
         print(price_including_tax)
         print(number_available)
         print(review_rating)
+        print(category)
