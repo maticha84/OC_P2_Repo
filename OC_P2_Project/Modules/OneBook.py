@@ -104,7 +104,10 @@ if __name__ == '__main__':
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
         review_rating, category, image_url = rech_info_page(urlsite,soup)
 
-        ### Pour création d'un fichier csv pour un livre
+        """Pour création d'un fichier csv pour un livre
+        Crée un csv avec les éléments du livre là où est executé le fichier
+        OneBook.py"""
+
         specialchars = ":/()#$%^*"
         for specialchar in specialchars:
             title = title.replace(specialchar, '-')
