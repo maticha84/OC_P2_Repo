@@ -1,12 +1,14 @@
 """
-Ici, on va créer les fonctions permettant de scrapper une seule page
+Ici, on va créer les fonctions permettant de scrapper un seul livre
+le but étant de récupérer les informations de ce livre dans
+un fichier csv.
 """
 
 import requests
 import urllib.request
 from bs4 import BeautifulSoup
 import re
-
+import csv
 
 def rech_info_page(urlsite,soup):
     """
@@ -101,15 +103,33 @@ if __name__ == '__main__':
         soup = BeautifulSoup(response.text, "html.parser")
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
         review_rating, category, image_url = rech_info_page(urlsite,soup)
-        print(title)
-        print(product_description)
-        print(universal_product_code)
-        print(price_excluding_tax)
-        print(price_including_tax)
-        print(number_available)
-        print(review_rating)
-        print(category)
-        print(image_url)
+
+        ### Pour création d'un fichier csv pour un livre
+        specialchars = ":/()#$%^*"
+        for specialchar in specialchars:
+            title = title.replace(specialchar, '-')
+        with open(title+'.csv', 'w', newline='') as fichiercsv:
+            writer = csv.writer(fichiercsv,delimiter=';',quotechar='"')
+            writer.writerow(['product_url_page','universal_product_code','title','price_including_tax',\
+                             'price_excluding_tax', 'number_available','category',\
+                            'review_rating','image_url','product_description'])
+            writer.writerow([url,universal_product_code,title,price_including_tax,\
+                             price_excluding_tax, number_available,category,\
+                             review_rating, image_url,product_description])
+
+"""
+Pour le csv - utilisation de pandas : 
+from pandas import DataFrame
+C = {'Nom': ['Depond','Alicat', 'Muller','Massont'],
+'Prénom': ['Marcel', 'Patricia', 'Antoni','Rudolf'],
+'E-mail': ['Marcel@gmail.com', 'Alicatpa@gmail.com',
+'Antoni.muller@gmail.com','Massont.rudolf@gmail.com'],
+'Télephone': ['1020304050', '.1224455660', '1669988445','1669988444'],
+}
+données = DataFrame(C, columns= ['Nom', 'Prénom', 'E-mail', 'Télephone'])
+export_csv = df.to_csv ('resultat.csv', index = None, header=True, encoding='utf-8', sep=';')
+print(données)
+"""
 
 
 
