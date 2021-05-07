@@ -3,11 +3,12 @@ Ici, on va créer les fonctions permettant de scrapper une seule page
 """
 
 import requests
+import urllib.request
 from bs4 import BeautifulSoup
 import re
 
 
-def rech_info_page(soup):
+def rech_info_page(urlsite,soup):
     """
     Title
     """
@@ -70,24 +71,36 @@ def rech_info_page(soup):
     Image_url
     <img src="../../media/cache/8e/5a/8e5a6639c7e2f9b59ff15f04a3b055e1.jpg" alt="Eragon (The Inheritance Cycle #1)">
     """
-    """
-    Product_page_url
-    """
+    imgs = soup.findAll('img')
+    for img in imgs:
+        alt = img['alt']
+        src = img['src']
+        if alt == title:
+            image_url = src.replace('../..', urlsite)
+            """pour le nom de l'image  
+            specialchars = ":/()#$%^*"
+            for specialchar in specialchars:
+                title = title.replace(specialchar,'-')
+            urllib.request.urlretrieve(image_url ,title +'.jpg') """
+
+            """
+            Product_page_url
+            """
     product_page_url = url
     return title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
-           number_available, review_rating, category
-    # print(product_page_url)
+           number_available, review_rating, category,image_url
 
 
 if __name__ == '__main__':
     #url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
     url = input('url : ')
+    urlsite = "http://books.toscrape.com"
     response = requests.get(url)
 
     if response.ok:
         soup = BeautifulSoup(response.text, "html.parser")
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
-        review_rating, category  = rech_info_page(soup)
+        review_rating, category, image_url = rech_info_page(urlsite,soup)
         print(title)
         print(product_description)
         print(universal_product_code)
@@ -96,3 +109,7 @@ if __name__ == '__main__':
         print(number_available)
         print(review_rating)
         print(category)
+        print(image_url)
+
+
+
