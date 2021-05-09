@@ -120,19 +120,7 @@ if __name__ == '__main__':
                              price_excluding_tax, number_available,category,\
                              review_rating, image_url,product_description])
 
-"""
-Pour le csv - utilisation de pandas : 
-from pandas import DataFrame
-C = {'Nom': ['Depond','Alicat', 'Muller','Massont'],
-'Prénom': ['Marcel', 'Patricia', 'Antoni','Rudolf'],
-'E-mail': ['Marcel@gmail.com', 'Alicatpa@gmail.com',
-'Antoni.muller@gmail.com','Massont.rudolf@gmail.com'],
-'Télephone': ['1020304050', '.1224455660', '1669988445','1669988444'],
-}
-données = DataFrame(C, columns= ['Nom', 'Prénom', 'E-mail', 'Télephone'])
-export_csv = df.to_csv ('resultat.csv', index = None, header=True, encoding='utf-8', sep=';')
-print(données)
-"""
+
 
 
 
