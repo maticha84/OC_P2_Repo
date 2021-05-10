@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Ici, on va créer les fonctions permettant de scrapper un seul livre
 le but étant de récupérer les informations de ce livre dans
@@ -10,7 +12,7 @@ from bs4 import BeautifulSoup
 import re
 import csv
 
-def rech_info_page(urlsite,soup):
+def rech_info_page(url,soup,urlsite):
     """
     Title
     """
@@ -94,15 +96,14 @@ def rech_info_page(urlsite,soup):
 
 
 if __name__ == '__main__':
-    #url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
-    url = input('url : ')
+    url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
     urlsite = "http://books.toscrape.com"
     response = requests.get(url)
 
     if response.ok:
         soup = BeautifulSoup(response.text, "html.parser")
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
-        review_rating, category, image_url = rech_info_page(urlsite,soup)
+        review_rating, category, image_url = rech_info_page(url,soup,urlsite)
 
         """Pour création d'un fichier csv pour un livre
         Crée un csv avec les éléments du livre là où est executé le fichier
