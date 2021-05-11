@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 import re
 import csv
 
-def rech_info_page(url,soup,urlsite):
+def search_info_page(url,soup,urlsite):
     """
     Title
     """
