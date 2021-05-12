@@ -11,15 +11,31 @@ import urllib.request
 from bs4 import BeautifulSoup
 import re
 import csv
+import os
 
-def search_info_page(url,soup,urlsite):
+def search_info_page(soup,urlsite):
+
+    """
+    Cette fonction permet de récupérer les éléments d'un livre
+    On instancie les variables vides pour le cas où il n'y ai pas
+    d'éléments dans la rubrique souhaitée (exemple : product_description)
+
+    """
+    title = ''
+    product_description = ''
+    universal_product_code=''
+    price_including_tax =''
+    price_excluding_tax=''
+    number_available=''
+    review_rating = ''
+    category = ''
+    image_url = ''
     """
     Title
     """
     titles = soup.find('title')
     title = titles.text.split('|')[0]
     title = title.strip()
-    # print(title)
 
     """
     Product description
@@ -81,16 +97,18 @@ def search_info_page(url,soup,urlsite):
         src = img['src']
         if alt == title:
             image_url = src.replace('../..', urlsite)
-            """pour le nom de l'image  
-            specialchars = ":/()#$%^*"
+            #pour le nom de l'image
+            specialchars = ":/()#$%^*\"\'"
             for specialchar in specialchars:
                 title = title.replace(specialchar,'-')
-            urllib.request.urlretrieve(image_url ,title +'.jpg') """
+            #Export de l'image dans le dossier de la catégorie concernée
+            # Pour la sauvegarde des fichiers images
+            if not os.path.exists('./Lists of Category'):
+                os.mkdir('./Lists of Category')
+            if not os.path.exists('./Lists of Category/' + category + '_pictures'):
+                os.mkdir('./Lists of Category/' + category + '_pictures')
+            urllib.request.urlretrieve(image_url,'./Lists of Category/' + category + '_pictures/'+title[0:19] +'.jpg')
 
-            """
-            Product_page_url
-            """
-    product_page_url = url
     return title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
            number_available, review_rating, category,image_url
 
@@ -103,7 +121,7 @@ if __name__ == '__main__':
     if response.ok:
         soup = BeautifulSoup(response.text, "html.parser")
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
-        review_rating, category, image_url = rech_info_page(url,soup,urlsite)
+        review_rating, category, image_url = search_info_page(soup,urlsite)
 
         """Pour création d'un fichier csv pour un livre
         Crée un csv avec les éléments du livre là où est executé le fichier

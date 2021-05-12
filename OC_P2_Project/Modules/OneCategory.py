@@ -14,8 +14,8 @@ import urllib.request
 from bs4 import BeautifulSoup
 import re
 from pandas import DataFrame
-from OneBook import search_info_page
-
+from Modules.OneBook import search_info_page
+import os
 def search_info_category(soupCat):
 
 
@@ -26,7 +26,7 @@ def search_info_category(soupCat):
     return category
  
 
-def search_tab_category(soupCat):
+def search_tab_category(soupCat,urlCat):
 
     listBooks=[]
     urlCatalogue = 'http://books.toscrape.com/catalogue/'
@@ -53,8 +53,8 @@ def search_tab_category(soupCat):
                     a = h3.find('a')
                     refBook = a['href'].split('../../../')[1]
 
-                    url_add = url_catalogue + refBook
-                    list_books.append(url_add)
+                    urlAdd = urlCatalogue + refBook
+                    listBooks.append(urlAdd)
 
 
     # si une seule page, alors
@@ -90,13 +90,13 @@ def crea_csv_by_category(category,list_books,urlsite):
     dictForCsv['category'] = []
     dictForCsv['image_url'] = []
 
-    # Récupération des éléments pour chaque book de la liste récupérée
+    # Récupération des éléments pour chaque book de la liste récupérée et création des dossiers de sauvegarde
     for book in list_books:
         responseBook = requests.get(book)
-        if response.ok:
+        if responseBook.ok:
             title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
             number_available, review_rating, category, image_url = \
-                search_info_page(book, BeautifulSoup(responseBook.text,"html.parser"),urlsite)
+                search_info_page(BeautifulSoup(responseBook.text,"html.parser"),urlsite)
             dictForCsv['product_page_url'].append(book)
             dictForCsv['title'].append(title)
             dictForCsv['product_description'].append(product_description)
@@ -108,10 +108,15 @@ def crea_csv_by_category(category,list_books,urlsite):
             dictForCsv['category'].append(category)
             dictForCsv['image_url'].append(image_url)
 
-    # Mise en forme dans un csv de résultat, du nom de la catégorie - Unicode utf-8
+    # Pour la sauvegarde des fichiers csv
+    if not os.path.exists('./Lists of Category'):
+        os.mkdir('./Lists of Category')
 
+
+    # Mise en forme dans un csv de résultat, du nom de la catégorie - Unicode utf-8
     data = DataFrame(dictForCsv, columns=dictForCsv.keys())
-    export_csv = data.to_csv(category + '.csv', mode='w', index=False, sep=';', quotechar='"',encoding='utf-8')
+    export_csv = data.to_csv('./Lists of Category/'+category + '.csv', mode='w', index=False, sep=';', quotechar='"'\
+                             ,encoding='utf-8')
 
 
     return export_csv
@@ -126,8 +131,8 @@ if __name__ == '__main__':
         soup = BeautifulSoup(response.text, "html.parser")
 
         category = search_info_category(soup)
-        list_books = search_tab_category(soup)
-        crea_csv_by_category(category,list_books,urlsite)
+        listBooks = search_tab_category(soup,urlCat)
+        crea_csv_by_category(category,listBooks,urlsite)
 
 
 

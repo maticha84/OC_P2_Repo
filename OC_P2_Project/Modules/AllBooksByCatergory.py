@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 
-"""
-Ici ce trouveront les fonction permettant de rechercher les différentes url de chaque
-catégory, pour faire la recherce par catégorie après.
-"""
-
 import requests
-import csv
-import urllib.request
 from bs4 import BeautifulSoup
-import re
-from pandas import DataFrame
 
 
+def research_all_category(urlsite,soupUrlSite):
 
-def research_all_category(soupUrlSite):
-    print(soupUrlSite)
-    pass
+    """
+    Cette fonction permet de rechercher toutes les pages de catégorie.
+    elle retourne un tableau avec les urls des pages de chaque catégorie.
+    """
+
+    urlCat=[]
+    divClassSideCat = soupUrlSite.find('div',attrs='side_categories')
+    ul = divClassSideCat.find('ul',attrs=None)
+    #print(ul)
+    allRefCat = ul.findAll('a')
+    for a in allRefCat:
+        category = a['href']
+        urlCat.append(urlsite + '/'+category)
+    return urlCat
 
 
 if __name__ == '__main__':
@@ -25,4 +28,4 @@ if __name__ == '__main__':
 
     if response.ok:
         soupUrlSite = BeautifulSoup(response.text,'html.parser')
-        research_all_category(soupUrlSite)
+        print(research_all_category(urlsite,soupUrlSite))
