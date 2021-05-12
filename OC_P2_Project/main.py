@@ -31,14 +31,14 @@ urlsite = "http://books.toscrape.com"
 responseSite = requests.get(urlsite)
 
 if responseSite.ok:
+    print('Start scrapping...')
+    tps1 = time.time()
     soupUrlSite = BeautifulSoup(responseSite.text,'html.parser')
 
     listUrlCat=abc.research_all_category(urlsite,soupUrlSite)
 
     for urlCat in listUrlCat:
-        print(urlCat)
         responseCat = requests.get(urlCat)
-        print(responseCat)
         if responseCat.ok:
             soup = BeautifulSoup(responseCat.text, "html.parser")
 
@@ -49,5 +49,6 @@ if responseSite.ok:
             time.sleep(2)
             print('Category '+category+' ok !')
 
-
+    tps2 = time.time() - tps1
+    print('End scrapping, during : '+tps2+' seconds')
 
