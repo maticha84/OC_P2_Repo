@@ -49,6 +49,7 @@ if responseSite.ok:
             time.sleep(2)
             print('Category '+category+' ok !')
 
-    tps2 = time.time() - tps1
-    print('End scrapping, during : '+tps2+' seconds')
+    tps2 = int(time.time() - tps1)
+    tpsFinal = time.strftime('%H:%M:%S', time.gmtime(tps2))
+    print('End scrapping, during : '+str(tpsFinal)+' seconds')
 
