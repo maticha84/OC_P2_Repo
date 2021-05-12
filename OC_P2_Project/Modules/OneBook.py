@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 
 """
-Ici, on va créer les fonctions permettant de scrapper un seul livre
+Ici ce trouve la fonction permettant de scrapper un seul livre
 le but étant de récupérer les informations de ce livre dans
 un fichier csv.
+on en profite pour récupérer l'image du livre par la même occasion : urllib.request.retreive.
+
+On a aussi besoin des modules 'os' pour la création des dossiers de sauvegardes, 'csv' pour la création du csv et
+'re' pour les regex.
+
+Pour mémoire, le csv créé ici ne concerne qu'un seul livre. Il n'est généré que si on execute ce fichier
+directement.
+Si on veut les csv par catégorie, merci de lancer le fichier 'main.py'
 """
 
 import requests
@@ -97,17 +105,22 @@ def search_info_page(soup,urlsite):
         src = img['src']
         if alt == title:
             image_url = src.replace('../..', urlsite)
+
             #pour le nom de l'image
-            specialchars = ":/()#$%^*\"\'"
+            specialchars = ":/()#$%^*\"?\\<>|"
             for specialchar in specialchars:
                 title = title.replace(specialchar,'-')
-            #Export de l'image dans le dossier de la catégorie concernée
-            # Pour la sauvegarde des fichiers images
-            if not os.path.exists('./Lists of Category'):
-                os.mkdir('./Lists of Category')
-            if not os.path.exists('./Lists of Category/' + category + '_pictures'):
-                os.mkdir('./Lists of Category/' + category + '_pictures')
-            urllib.request.urlretrieve(image_url,'./Lists of Category/' + category + '_pictures/'+title[0:19] +'.jpg')
+
+            """Export de l'image dans le dossier de la catégorie concernée
+            Pour la sauvegarde des fichiers images, 
+            ils sont dans le dossier de la catégorie concernée. Le nom de chaque image est restreint 
+            aux 20 premiers caractères.
+            """
+            if not os.path.exists('./Lists of Categories'):
+                os.mkdir('./Lists of Categories')
+            if not os.path.exists('./Lists of Categories/' + category + '_pictures'):
+                os.mkdir('./Lists of Categories/' + category + '_pictures')
+            urllib.request.urlretrieve(image_url,'./Lists of Categories/' + category + '_pictures/'+title[0:19] +'....jpg')
 
     return title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
            number_available, review_rating, category,image_url

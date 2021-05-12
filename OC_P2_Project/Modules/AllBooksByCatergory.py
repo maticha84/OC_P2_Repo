@@ -14,7 +14,6 @@ def research_all_category(urlsite,soupUrlSite):
     urlCat=[]
     divClassSideCat = soupUrlSite.find('div',attrs='side_categories')
     ul = divClassSideCat.find('ul',attrs=None)
-    #print(ul)
     allRefCat = ul.findAll('a')
     for a in allRefCat:
         category = a['href']

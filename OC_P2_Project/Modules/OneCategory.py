@@ -9,15 +9,18 @@ http://books.toscrape.com/catalogue/category/books/mystery_3/index.html
 """
 
 import requests
-import csv
-import urllib.request
 from bs4 import BeautifulSoup
-import re
 from pandas import DataFrame
 from Modules.OneBook import search_info_page
 import os
+
+
 def search_info_category(soupCat):
 
+    """
+    Cette fonction permet de récupérer le nom de la catégorie que
+    l'on est en train de scroller
+    """
 
     #Recherche du nom de la catégorie
     ul = soupCat.find('ul',attrs='breadcrumb')
@@ -27,12 +30,16 @@ def search_info_category(soupCat):
  
 
 def search_tab_category(soupCat,urlCat):
-
+    """
+    Cette fonction permet de rechercher tous les livres en fonction du nombre de pages dans la
+    catégorie.
+    Cette fonction permet de retourner un tableau contenant la liste des URL des livres de la
+    catégorie srollée.
+    """
     listBooks=[]
     urlCatalogue = 'http://books.toscrape.com/catalogue/'
+
     # choix : il n'y a qu'une page ou il y en a plusieurs
-
-
     # si plusieurs pages, alors
     if soupCat.find('ul',attrs = "pager") :
         # récupérer le nombre x de pages à scroller,
@@ -77,6 +84,13 @@ def search_tab_category(soupCat,urlCat):
 
 
 def crea_csv_by_category(category,list_books,urlsite):
+
+    """
+    Cette fonction permet de récupérer dans un fichier csv du nom de la catégorie la liste des
+    éléments de chaque livre de la catégorie.
+    Pour fonctionner, elle s'appuie sur la fonction search_info_page du module OneBook.py
+    Le fichier csv se créera dans un dossier 'List of Categories', là où la fonction sera lancée.
+    """
     # Création dico pour le csv
     dictForCsv = {}
     dictForCsv['product_page_url'] = []
@@ -109,13 +123,13 @@ def crea_csv_by_category(category,list_books,urlsite):
             dictForCsv['image_url'].append(image_url)
 
     # Pour la sauvegarde des fichiers csv
-    if not os.path.exists('./Lists of Category'):
-        os.mkdir('./Lists of Category')
+    if not os.path.exists('./Lists of Categories'):
+        os.mkdir('./Lists of Categories')
 
 
     # Mise en forme dans un csv de résultat, du nom de la catégorie - Unicode utf-8
     data = DataFrame(dictForCsv, columns=dictForCsv.keys())
-    export_csv = data.to_csv('./Lists of Category/'+category + '.csv', mode='w', index=False, sep=';', quotechar='"'\
+    export_csv = data.to_csv('./Lists of Categories/'+category + '.csv', mode='w', index=False, sep=';', quotechar='"'\
                              ,encoding='utf-8')
 
 
