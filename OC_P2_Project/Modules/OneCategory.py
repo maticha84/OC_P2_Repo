@@ -12,6 +12,9 @@ import requests
 from bs4 import BeautifulSoup
 from pandas import DataFrame
 from Modules.OneBook import search_info_page
+import Modules.ParallelWork as pw
+from threading import Thread
+from queue import Queue
 import os
 
 
