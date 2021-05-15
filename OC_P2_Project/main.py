@@ -21,11 +21,18 @@ une pause de 2s entre chaque scroll de catégorie est mise en place pour éviter
 """
 
 import requests
+import os
+import time
 from bs4 import BeautifulSoup
+from threading import Thread
+from queue import Queue
+from Modules import ParallelWork as pw
 from Modules import AllBooksByCatergory as abc
 from Modules import OneCategory as oc
-import time
 
+
+if not os.path.exists('./Lists of Categories'):
+    os.mkdir('./Lists of Categories')
 
 urlsite = "http://books.toscrape.com"
 responseSite = requests.get(urlsite)
@@ -37,17 +44,19 @@ if responseSite.ok:
 
     listUrlCat=abc.research_all_category(urlsite,soupUrlSite)
 
-    for urlCat in listUrlCat:
-        responseCat = requests.get(urlCat)
-        if responseCat.ok:
-            soup = BeautifulSoup(responseCat.text, "html.parser")
+    thread_count = 8
 
-            category = oc.search_info_category(soup)
-            print('Category '+category+' in progress...')
-            listBooks = oc.search_tab_category(soup,urlCat)
-            oc.crea_csv_by_category(category, listBooks, urlsite)
-            time.sleep(2)
-            print('Category '+category+' ok !')
+    queue = Queue()
+
+    for i in range(thread_count):
+        parallelWork = pw.ParallelWorkGlobal(queue,urlsite)
+        parallelWork.daemon = True
+        parallelWork.start()
+
+    for urlCat in listUrlCat:
+        queue.put(urlCat)
+
+    queue.join()
 
     tps2 = int(time.time() - tps1)
     tpsFinal = time.strftime('%H:%M:%S', time.gmtime(tps2))
