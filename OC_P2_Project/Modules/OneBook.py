@@ -120,6 +120,7 @@ def search_info_page(soup,urlsite):
                 os.mkdir('./Lists of Categories')
             if not os.path.exists('./Lists of Categories/' + category + '_pictures'):
                 os.mkdir('./Lists of Categories/' + category + '_pictures')
+
             urllib.request.urlretrieve(image_url,'./Lists of Categories/' + category + '_pictures/'+title[0:19] +'....jpg')
 
     return title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
