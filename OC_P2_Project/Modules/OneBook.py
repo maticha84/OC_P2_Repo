@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Ici ce trouve la fonction permettant de scrapper un seul livre
+Ici se trouve la fonction permettant de scrapper un seul livre
 le but étant de récupérer les informations de ce livre dans
 un fichier csv.
 on en profite pour récupérer l'image du livre par la même occasion : urllib.request.retreive.

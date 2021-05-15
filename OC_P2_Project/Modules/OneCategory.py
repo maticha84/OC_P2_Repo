@@ -18,8 +18,10 @@ import os
 def search_info_category(soupCat):
 
     """
-    Cette fonction permet de récupérer le nom de la catégorie que
-    l'on est en train de scroller
+    Cette fonction permet de récupérer le nom de la catégorie que l'on est en train de scroller
+
+    soupCat : paramètre contenant le résultat de la commande BeautifulSoup sur la réponse à la requète sur l'url
+    de la catégorie.
     """
 
     #Recherche du nom de la catégorie
