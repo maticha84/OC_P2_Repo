@@ -85,7 +85,7 @@ def search_tab_category(soupCat,urlCat):
     return listBooks
 
 
-def crea_csv_by_category(category,list_books,urlsite):
+def crea_csv_by_category(category,listBooks,urlsite):
 
     """
     Cette fonction permet de récupérer dans un fichier csv du nom de la catégorie la liste des
@@ -107,7 +107,7 @@ def crea_csv_by_category(category,list_books,urlsite):
     dictForCsv['image_url'] = []
 
     # Récupération des éléments pour chaque book de la liste récupérée et création des dossiers de sauvegarde
-    for book in list_books:
+    for book in listBooks:
         responseBook = requests.get(book)
         if responseBook.ok:
             title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
