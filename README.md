@@ -1,5 +1,5 @@
 # OC_P2_Project
-####Repo projet 2 - Formation OC Developpeur application - Python
+###Repo projet 2 - Formation OC Developpeur application - Python
 ## Introduction
 
 Ce projet a pour objectif de récupérer tous les éléments des livres, par catégorie, se 
