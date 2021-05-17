@@ -8,7 +8,7 @@ category.py
 book.py
 parrallel_work.py
 
-Sans ces 3 fichiers, le script actuel ne fonctionnera pas.
+Sans ces 4 fichiers, le script actuel ne fonctionnera pas.
 
 Il permet de récupérer tous les livres, par catégorie, ainsi que l'image de chacun d'eux, dans un dossier
 'List of Categories'. Dans ce dossier seront alors générés tous les fichiers csv (1 par catégorie),
