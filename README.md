@@ -70,7 +70,7 @@ urlsite : paramètre obligatoire, l'url du site (ici http://books.toscrape.com/)
 soupUrlSite : paramètre obligatoire de la fonction, contenant le résultat de la commande BeautifulSoup sur la réponse à la
   requète sur l'url du site
 
-### Fichier _parallel_work.py
+### Fichier _parallel_work.py_
 Dans ce fichier se trouve la déclaration de la classe ParallelWorkGlobal(Thread),permettant la mise en place de 
 parallèlisation entre les exécutions des différentes catégories. \
 Mis en place dans le main.py, cela permet d'exécuter la recherche par catégorie en simultanée, et de diminuer le temps 
