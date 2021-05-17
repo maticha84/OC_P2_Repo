@@ -2,10 +2,11 @@
 """
 Ceci est le script qui lancer l'application générale.
 
-Il s'appuie sur 3 modules, présent dans le dossier Modules :
-AllBookByCategory.py
-OneCategory.py
-OneBook.py
+Il s'appuie sur 4 modules, présent dans le dossier books :
+books_by_category.py
+category.py
+book.py
+parrallel_work.py
 
 Sans ces 3 fichiers, le script actuel ne fonctionnera pas.
 
@@ -26,39 +27,39 @@ import time
 from bs4 import BeautifulSoup
 from threading import Thread
 from queue import Queue
-from Modules import ParallelWork as pw
-from Modules import AllBooksByCatergory as abc
-from Modules import OneCategory as oc
+from books import parallel_work as pw
+from books import books_by_category as bbc
+from books import category as oc
 
 
 if not os.path.exists('./Lists of Categories'):
     os.mkdir('./Lists of Categories')
 
-urlsite = "http://books.toscrape.com"
-responseSite = requests.get(urlsite)
+url_site = "http://books.toscrape.com"
+response_site = requests.get(url_site)
 
-if responseSite.ok:
+if response_site.ok:
     print('Start scrapping...')
     tps1 = time.time()
-    soupUrlSite = BeautifulSoup(responseSite.content,'html.parser')
+    soup_url_site = BeautifulSoup(response_site.content,'html.parser')
 
-    listUrlCat=abc.research_all_category(urlsite,soupUrlSite)
+    list_url_category=bbc.research_all_category(url_site,soup_url_site)
 
     thread_count = 10
 
     queue = Queue()
 
     for i in range(thread_count):
-        parallelWork = pw.ParallelWorkGlobal(queue,urlsite)
-        parallelWork.daemon = True
-        parallelWork.start()
+        parallel_work = pw.ParallelWorkGlobal(queue,url_site)
+        parallel_work.daemon = True
+        parallel_work.start()
 
-    for urlCat in listUrlCat:
-        queue.put(urlCat)
+    for url_category in list_url_category:
+        queue.put(url_category)
 
     queue.join()
 
     tps2 = int(time.time() - tps1)
-    tpsFinal = time.strftime('%H:%M:%S', time.gmtime(tps2))
-    print('End scrapping, during : '+str(tpsFinal)+' seconds')
+    tps_final = time.strftime('%H:%M:%S', time.gmtime(tps2))
+    print('End scrapping, during : '+str(tps_final)+' seconds')
 

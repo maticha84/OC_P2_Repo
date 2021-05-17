@@ -2,8 +2,7 @@
 
 from threading import Thread
 from queue import Queue
-from Modules import AllBooksByCatergory as abc
-from Modules import OneCategory as oc
+from books import books_by_category as bbc
 
 
 class ParallelWorkGlobal(Thread):
@@ -13,15 +12,15 @@ class ParallelWorkGlobal(Thread):
     urlsite : l'adresse url du site : "http://books.toscrape.com"
     """
 
-    def __init__(self, queue,urlsite):
+    def __init__(self, queue,url_site):
         Thread.__init__(self)
         self.queue = queue
-        self.urlsite = urlsite
+        self.url_site = url_site
 
 
     def run(self):
         while True:
-            urlCat = self.queue.get()
-            abc.result_main(self.urlsite,urlCat)
+            url_category = self.queue.get()
+            bbc.result_main(self.url_site,url_category)
             self.queue.task_done()
 
