@@ -21,6 +21,6 @@ class ParallelWorkGlobal(Thread):
     def run(self):
         while True:
             url_category = self.queue.get()
-            bbc.result_main(self.url_site,url_category)
+            bbc.result_main(self.url_site, url_category)
             self.queue.task_done()
 

@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 from pandas import DataFrame
 from books.book import search_info_page
 import os
+import re
 
 
 def search_info_category(soup_category):
@@ -42,7 +43,6 @@ def search_tab_category(soup_category, url_category):
     list_books = []
     url_catalogue = 'http://books.toscrape.com/catalogue/'
 
-    # choix : il n'y a qu'une page ou il y en a plusieurs
     # si plusieurs pages, alors
     if soup_category.find('ul', attrs="pager"):
         # récupérer le nombre x de pages à scroller,
@@ -53,16 +53,15 @@ def search_tab_category(soup_category, url_category):
         # pour url_page1  à url_pagex
         for i in range(1, x + 1, 1):
             url = url_category.split('/index.html')
-            urlPage = url[0] + '/page-' + str(i) + '.html'
+            url_page = url[0] + '/page-' + str(i) + '.html'
             # recherche des liens dans les pages et les ajouter dans le tableau des liens
-            research_links = requests.get(urlPage)
+            research_links = requests.get(url_page)
             if research_links.ok:
                 soup_links = BeautifulSoup(research_links.content, "html.parser")
                 h3s = soup_links.findAll('h3')
                 for h3 in h3s:
                     a = h3.find('a')
                     ref_book = a['href'].split('../../../')[1]
-
                     url_add = url_catalogue + ref_book
                     list_books.append(url_add)
 
@@ -76,33 +75,11 @@ def search_tab_category(soup_category, url_category):
             for h3 in h3s:
                 a = h3.find('a')
                 ref_book = a['href'].split('../../../')[1]
-
                 url_add = url_catalogue + ref_book
                 list_books.append(url_add)
-    # recherche des liens dans la page et les ajouter dans le tableau des liens
 
     # retourne la liste des url des livres de la catégorie
     return list_books
-
-
-def crea_dico_for_csv(book, url_site, dico_for_csv):
-    response_book = requests.get(book)
-    if response_book.ok:
-        title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
-        number_available, review_rating, category, image_url = \
-            search_info_page(BeautifulSoup(response_book.content, "html.parser"), url_site)
-        dico_for_csv['product_page_url'].append(book)
-        dico_for_csv['title'].append(title)
-        dico_for_csv['product_description'].append(product_description)
-        dico_for_csv['universal_product_code'].append(universal_product_code)
-        dico_for_csv['price_excluding_tax'].append(price_excluding_tax)
-        dico_for_csv['price_including_tax'].append(price_including_tax)
-        dico_for_csv['number_available'].append(number_available)
-        dico_for_csv['review_rating'].append(review_rating)
-        dico_for_csv['category'].append(category)
-        dico_for_csv['image_url'].append(image_url)
-
-    return dico_for_csv
 
 
 def crea_csv_by_category(category, list_books, url_site, dico_for_csv):
@@ -116,10 +93,24 @@ def crea_csv_by_category(category, list_books, url_site, dico_for_csv):
     # Récupération des éléments pour chaque book de la liste récupérée et création des dossiers de sauvegarde
 
     for book in list_books:
-        dico = crea_dico_for_csv(book, url_site, dico_for_csv)
+        response_book = requests.get(book)
+        if response_book.ok:
+            title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
+            number_available, review_rating, category, image_url = \
+                search_info_page(BeautifulSoup(response_book.content, "html.parser"), url_site)
+            dico_for_csv['product_page_url'].append(book)
+            dico_for_csv['title'].append(title)
+            dico_for_csv['product_description'].append(product_description)
+            dico_for_csv['universal_product_code'].append(universal_product_code)
+            dico_for_csv['price_excluding_tax'].append(price_excluding_tax)
+            dico_for_csv['price_including_tax'].append(price_including_tax)
+            dico_for_csv['number_available'].append(number_available)
+            dico_for_csv['review_rating'].append(review_rating)
+            dico_for_csv['category'].append(category)
+            dico_for_csv['image_url'].append(image_url)
 
     # Mise en forme dans un csv de résultat, du nom de la catégorie - Unicode utf-8
-    data = DataFrame(dico_for_csv, columns=dico.keys())
+    data = DataFrame(dico_for_csv, columns=dico_for_csv.keys())
     export_csv = data.to_csv('./Lists of Categories/' + category + '.csv', mode='w', index=False, sep=';',
                              quotechar='"', encoding='utf-8-sig')
 
@@ -144,5 +135,5 @@ if __name__ == '__main__':
                     'price_excluding_tax': [], 'price_including_tax': [], 'number_available': [], 'review_rating': [],
                     'category': [], 'image_url': []}
 
-    dico = crea_dico_for_csv(url_category, url_site, dico_for_csv)
-    crea_csv_by_category(category, list_books, url_site, dico)
+    # dico = crea_dico_for_csv(url_category, url_site, dico_for_csv)
+    crea_csv_by_category(category, list_books, url_site, dico_for_csv)

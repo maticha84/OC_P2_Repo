@@ -43,10 +43,8 @@ if response_site.ok:
     tps1 = time.time()
     soup_url_site = BeautifulSoup(response_site.content,'html.parser')
 
-    list_url_category=bbc.research_all_category(url_site,soup_url_site)
-
+    list_url_category = bbc.research_all_category(url_site,soup_url_site)
     thread_count = 10
-
     queue = Queue()
 
     for i in range(thread_count):
