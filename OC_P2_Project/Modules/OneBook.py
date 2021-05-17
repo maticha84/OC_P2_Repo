@@ -66,17 +66,15 @@ def search_info_page(soup,urlsite):
     trs = soup.findAll('tr')
     for tr in trs:
         th = tr.find('th')
-        # print(th.text)
         td = tr.find('td')
-        # print(td.text)
         if th.text == "UPC":
             universal_product_code = td.text
             # break
         elif th.text == "Price (excl. tax)":
-            price_excluding_tax = td.text.split('Â')[1]
+            price_excluding_tax = td.text
             # break
         elif th.text == "Price (incl. tax)":
-            price_including_tax = td.text.split('Â')[1]
+            price_including_tax = td.text
             # break
         elif th.text == "Availability":
             number_available = td.text
@@ -133,7 +131,7 @@ if __name__ == '__main__':
     response = requests.get(url)
 
     if response.ok:
-        soup = BeautifulSoup(response.text, "html.parser")
+        soup = BeautifulSoup(response.content, "html.parser")
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
         review_rating, category, image_url = search_info_page(soup,urlsite)
 
@@ -144,7 +142,7 @@ if __name__ == '__main__':
         specialchars = ":/()#$%^*"
         for specialchar in specialchars:
             title = title.replace(specialchar, '-')
-        with open(title+'.csv', 'w', newline='') as fichiercsv:
+        with open('./Lists of Categories/'+title+'.csv', 'w', newline='',encoding='utf-8-sig') as fichiercsv:
             writer = csv.writer(fichiercsv,delimiter=';',quotechar='"')
             writer.writerow(['product_url_page','universal_product_code','title','price_including_tax',\
                              'price_excluding_tax', 'number_available','category',\

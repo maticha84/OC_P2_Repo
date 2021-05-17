@@ -26,7 +26,7 @@ def result_main(urlsite,urlCat):
 
     responseCat = requests.get(urlCat)
     if responseCat.ok:
-        soup = BeautifulSoup(responseCat.text, "html.parser")
+        soup = BeautifulSoup(responseCat.content, "html.parser")
 
         category = oc.search_info_category(soup)
         print('Category '+category+' in progress...')
@@ -55,5 +55,5 @@ if __name__ == '__main__':
     response = requests.get(urlsite)
 
     if response.ok:
-        soupUrlSite = BeautifulSoup(response.text,'html.parser')
+        soupUrlSite = BeautifulSoup(response.content,'html.parser')
         print(research_all_category(urlsite,soupUrlSite))

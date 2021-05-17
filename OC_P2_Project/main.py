@@ -40,11 +40,11 @@ responseSite = requests.get(urlsite)
 if responseSite.ok:
     print('Start scrapping...')
     tps1 = time.time()
-    soupUrlSite = BeautifulSoup(responseSite.text,'html.parser')
+    soupUrlSite = BeautifulSoup(responseSite.content,'html.parser')
 
     listUrlCat=abc.research_all_category(urlsite,soupUrlSite)
 
-    thread_count = 8
+    thread_count = 10
 
     queue = Queue()
 

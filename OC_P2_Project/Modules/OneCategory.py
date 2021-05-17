@@ -58,7 +58,7 @@ def search_tab_category(soupCat,urlCat):
             # recherche des liens dans les pages et les ajouter dans le tableau des liens
             researchLinks = requests.get(urlPage)
             if researchLinks.ok:
-                soupLinks = BeautifulSoup(researchLinks.text, "html.parser")
+                soupLinks = BeautifulSoup(researchLinks.content, "html.parser")
                 h3s = soupLinks.findAll('h3')
                 for h3 in h3s:
                     a = h3.find('a')
@@ -72,7 +72,7 @@ def search_tab_category(soupCat,urlCat):
     else:
         researchLinks = requests.get(urlCat)
         if researchLinks.ok:
-            soupLinks = BeautifulSoup(researchLinks.text, "html.parser")
+            soupLinks = BeautifulSoup(researchLinks.content, "html.parser")
             h3s = soupLinks.findAll('h3')
             for h3 in h3s:
                 a = h3.find('a')
@@ -91,7 +91,7 @@ def dico_for_csv(book,urlsite,dictForCsv):
     if responseBook.ok:
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
         number_available, review_rating, category, image_url = \
-            search_info_page(BeautifulSoup(responseBook.text, "html.parser"), urlsite)
+            search_info_page(BeautifulSoup(responseBook.content, "html.parser"), urlsite)
         dictForCsv['product_page_url'].append(book)
         dictForCsv['title'].append(title)
         dictForCsv['product_description'].append(product_description)
@@ -125,7 +125,7 @@ def crea_csv_by_category(category, listBooks, urlsite,dictForCsv):
     # Mise en forme dans un csv de résultat, du nom de la catégorie - Unicode utf-8
     data = DataFrame(dictForCsv, columns=dico.keys())
     export_csv = data.to_csv('./Lists of Categories/'+category + '.csv', mode='w', index=False, sep=';', quotechar='"'\
-                             ,encoding='utf-8')
+                             ,encoding='utf-8-sig')
 
 
     return export_csv
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     response = requests.get(urlCat)
 
     if response.ok:
-        soup = BeautifulSoup(response.text, "html.parser")
+        soup = BeautifulSoup(response.content, "html.parser")
 
         category = search_info_category(soup)
         listBooks = search_tab_category(soup,urlCat)
