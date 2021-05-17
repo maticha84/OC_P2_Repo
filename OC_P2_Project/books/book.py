@@ -21,7 +21,7 @@ import re
 import csv
 import os
 
-def search_info_page(soup,urlsite):
+def search_info_page(soup,url_site):
 
     """
     Cette fonction permet de récupérer les éléments d'un livre
@@ -51,7 +51,7 @@ def search_info_page(soup,urlsite):
     articles = soup.findAll('article')
     for article in articles:
         p = article.find('p', attrs=None)
-        if p != None:
+        if p is not None:
             product_description = p.text
 
     # print(product_description)
@@ -91,7 +91,7 @@ def search_info_page(soup,urlsite):
     for a in aaa:
         ref = a['href']
         rech = re.search('../category/books/', ref)
-        if not rech == None:
+        if rech is not None:
             category = a.text
     """
     Image_url
@@ -102,12 +102,12 @@ def search_info_page(soup,urlsite):
         alt = img['alt']
         src = img['src']
         if alt == title:
-            image_url = src.replace('../..', urlsite)
+            image_url = src.replace('../..', url_site)
 
             #pour le nom de l'image
-            specialchars = ":/()#$%^*\"?\\<>|"
-            for specialchar in specialchars:
-                title = title.replace(specialchar,'-')
+            special_chars = ":/()#$%^*\"?\\<>|"
+            for special_char in special_chars:
+                title = title.replace(special_char,'-')
 
             """Export de l'image dans le dossier de la catégorie concernée
             Pour la sauvegarde des fichiers images, 
@@ -127,23 +127,23 @@ def search_info_page(soup,urlsite):
 
 if __name__ == '__main__':
     url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
-    urlsite = "http://books.toscrape.com"
+    url_site = "http://books.toscrape.com"
     response = requests.get(url)
 
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
         title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
-        review_rating, category, image_url = search_info_page(soup,urlsite)
+        review_rating, category, image_url = search_info_page(soup,url_site)
 
         """Pour création d'un fichier csv pour un livre
         Crée un csv avec les éléments du livre là où est executé le fichier
-        OneBook.py"""
+        book.py"""
 
-        specialchars = ":/()#$%^*"
-        for specialchar in specialchars:
-            title = title.replace(specialchar, '-')
-        with open('./Lists of Categories/'+title+'.csv', 'w', newline='',encoding='utf-8-sig') as fichiercsv:
-            writer = csv.writer(fichiercsv,delimiter=';',quotechar='"')
+        special_chars = ":/()#$%^*"
+        for special_char in special_chars:
+            title = title.replace(special_char, '-')
+        with open('./Lists of Categories/'+title+'.csv', 'w', newline='',encoding='utf-8-sig') as fichier_csv:
+            writer = csv.writer(fichier_csv,delimiter=';',quotechar='"')
             writer.writerow(['product_url_page','universal_product_code','title','price_including_tax',\
                              'price_excluding_tax', 'number_available','category',\
                             'review_rating','image_url','product_description'])
