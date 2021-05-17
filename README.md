@@ -70,7 +70,11 @@ urlsite : paramètre obligatoire, l'url du site (ici http://books.toscrape.com/)
 soupUrlSite : paramètre obligatoire de la fonction, contenant le résultat de la commande BeautifulSoup sur la réponse à la
   requète sur l'url du site
 
-
+###Fichier _ParallelWork.py
+Dans ce fichier se trouve la déclaration de la classe ParallelWorkGlobal(Thread),permettant la mise en place de 
+parallèlisation entre les exécutions des différentes catégories. \
+Mis en place dans le main.py, cela permet d'exécuter la recherche par catégorie en simultanée, et de diminuer le temps 
+d'execution de plus de 17 min à moins de 3 min.
 ## Lancement du scrapping
 
 Pour pouvoir utiliser le projet, il vous faudra au préalable récupérer l'intégralité du dossier 
@@ -88,5 +92,8 @@ Ensuite, executez avec python le fichier main.py. A l'exécution du fichier _**m
 - dans ce dossier, un dossier par catégorie est créé (de la forme _'category_pictures'_),
   il contient pour chaque catégorie les images des livres de la catégorie.
   
-Le temps d'exécution est d'environ 17 min. Le détail s'affiche dans la console d'exécution du script. En fin de 
+Le temps d'exécution est d'environ 2min30. Le détail s'affiche dans la console d'exécution du script. En fin de 
 programme, le temps d'exécution s'affiche.
+
+La mise en place du parralèlisme d'exécution (thread et queue fifo), permet une optimisation du temps d'execution, 
+car 10 catégories sont scrappées en simultanée.
