@@ -28,6 +28,8 @@ def search_info_category(soupCat):
     ul = soupCat.find('ul',attrs='breadcrumb')
     li = ul.find('li',attrs='active')
     category = li.text
+    if not os.path.exists('./Lists of Categories/' + category + '_pictures'):
+        os.mkdir('./Lists of Categories/' + category + '_pictures')
     return category
  
 
@@ -56,7 +58,7 @@ def search_tab_category(soupCat,urlCat):
             # recherche des liens dans les pages et les ajouter dans le tableau des liens
             researchLinks = requests.get(urlPage)
             if researchLinks.ok:
-                soupLinks = BeautifulSoup(researchLinks.text, "html.parser")
+                soupLinks = BeautifulSoup(researchLinks.content, "html.parser")
                 h3s = soupLinks.findAll('h3')
                 for h3 in h3s:
                     a = h3.find('a')
@@ -70,7 +72,7 @@ def search_tab_category(soupCat,urlCat):
     else:
         researchLinks = requests.get(urlCat)
         if researchLinks.ok:
-            soupLinks = BeautifulSoup(researchLinks.text, "html.parser")
+            soupLinks = BeautifulSoup(researchLinks.content, "html.parser")
             h3s = soupLinks.findAll('h3')
             for h3 in h3s:
                 a = h3.find('a')
@@ -78,14 +80,33 @@ def search_tab_category(soupCat,urlCat):
 
                 urlAdd = urlCatalogue + refBook
                 listBooks.append(urlAdd)
-    # recherche des liens dans la pageet les ajouter dans le tableau des liens
+    # recherche des liens dans la page et les ajouter dans le tableau des liens
 
 
     #retourne la liste des url des livres de la catégorie
     return listBooks
 
+def dico_for_csv(book,urlsite,dictForCsv):
+    responseBook = requests.get(book)
+    if responseBook.ok:
+        title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
+        number_available, review_rating, category, image_url = \
+            search_info_page(BeautifulSoup(responseBook.content, "html.parser"), urlsite)
+        dictForCsv['product_page_url'].append(book)
+        dictForCsv['title'].append(title)
+        dictForCsv['product_description'].append(product_description)
+        dictForCsv['universal_product_code'].append(universal_product_code)
+        dictForCsv['price_excluding_tax'].append(price_excluding_tax)
+        dictForCsv['price_including_tax'].append(price_including_tax)
+        dictForCsv['number_available'].append(number_available)
+        dictForCsv['review_rating'].append(review_rating)
+        dictForCsv['category'].append(category)
+        dictForCsv['image_url'].append(image_url)
 
-def crea_csv_by_category(category,listBooks,urlsite):
+    return dictForCsv
+
+
+def crea_csv_by_category(category, listBooks, urlsite,dictForCsv):
 
     """
     Cette fonction permet de récupérer dans un fichier csv du nom de la catégorie la liste des
@@ -93,7 +114,37 @@ def crea_csv_by_category(category,listBooks,urlsite):
     Pour fonctionner, elle s'appuie sur la fonction search_info_page du module OneBook.py
     Le fichier csv se créera dans un dossier 'List of Categories', là où la fonction sera lancée.
     """
-    # Création dico pour le csv
+
+
+    # Récupération des éléments pour chaque book de la liste récupérée et création des dossiers de sauvegarde
+
+    for book in listBooks:
+        dico = dico_for_csv(book,urlsite,dictForCsv)
+
+
+    # Mise en forme dans un csv de résultat, du nom de la catégorie - Unicode utf-8
+    data = DataFrame(dictForCsv, columns=dico.keys())
+    export_csv = data.to_csv('./Lists of Categories/'+category + '.csv', mode='w', index=False, sep=';', quotechar='"'\
+                             ,encoding='utf-8-sig')
+
+
+    return export_csv
+
+if __name__ == '__main__':
+    #url_cat = 'http://books.toscrape.com/catalogue/category/books/mystery_3/index.html'
+    urlsite = "http://books.toscrape.com"
+    urlCat = 'http://books.toscrape.com/catalogue/category/books/travel_2/index.html'
+    response = requests.get(urlCat)
+
+    if response.ok:
+        soup = BeautifulSoup(response.content, "html.parser")
+
+        category = search_info_category(soup)
+        listBooks = search_tab_category(soup,urlCat)
+
+    url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
+    urlsite = "http://books.toscrape.com"
+    #creadico
     dictForCsv = {}
     dictForCsv['product_page_url'] = []
     dictForCsv['title'] = []
@@ -106,49 +157,8 @@ def crea_csv_by_category(category,listBooks,urlsite):
     dictForCsv['category'] = []
     dictForCsv['image_url'] = []
 
-    # Récupération des éléments pour chaque book de la liste récupérée et création des dossiers de sauvegarde
-    for book in listBooks:
-        responseBook = requests.get(book)
-        if responseBook.ok:
-            title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
-            number_available, review_rating, category, image_url = \
-                search_info_page(BeautifulSoup(responseBook.text,"html.parser"),urlsite)
-            dictForCsv['product_page_url'].append(book)
-            dictForCsv['title'].append(title)
-            dictForCsv['product_description'].append(product_description)
-            dictForCsv['universal_product_code'].append(universal_product_code)
-            dictForCsv['price_excluding_tax'].append(price_excluding_tax)
-            dictForCsv['price_including_tax'].append(price_including_tax)
-            dictForCsv['number_available'].append(number_available)
-            dictForCsv['review_rating'].append(review_rating)
-            dictForCsv['category'].append(category)
-            dictForCsv['image_url'].append(image_url)
+    dico = dico_for_csv(urlCat,urlsite,dictForCsv)
+    #print(dico)
 
-    # Pour la sauvegarde des fichiers csv
-    if not os.path.exists('./Lists of Categories'):
-        os.mkdir('./Lists of Categories')
-
-
-    # Mise en forme dans un csv de résultat, du nom de la catégorie - Unicode utf-8
-    data = DataFrame(dictForCsv, columns=dictForCsv.keys())
-    export_csv = data.to_csv('./Lists of Categories/'+category + '.csv', mode='w', index=False, sep=';', quotechar='"'\
-                             ,encoding='utf-8')
-
-
-    return export_csv
-
-if __name__ == '__main__':
-    #url_cat = 'http://books.toscrape.com/catalogue/category/books/mystery_3/index.html'
-    urlsite = "http://books.toscrape.com"
-    urlCat = 'http://books.toscrape.com/catalogue/category/books/travel_2/index.html'
-    response = requests.get(urlCat)
-
-    if response.ok:
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        category = search_info_category(soup)
-        listBooks = search_tab_category(soup,urlCat)
-        crea_csv_by_category(category,listBooks,urlsite)
-
-
+    crea_csv_by_category(category, listBooks, urlsite, dico)
 
