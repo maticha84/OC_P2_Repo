@@ -21,8 +21,8 @@ import re
 import csv
 import os
 
-def search_info_page(soup,url_site):
 
+def search_info_page(soup, url_site):
     """
     Cette fonction permet de récupérer les éléments d'un livre
     On instancie les variables vides pour le cas où il n'y ai pas
@@ -31,10 +31,10 @@ def search_info_page(soup,url_site):
     """
     title = ''
     product_description = ''
-    universal_product_code=''
-    price_including_tax =''
-    price_excluding_tax=''
-    number_available=''
+    universal_product_code = ''
+    price_including_tax = ''
+    price_excluding_tax = ''
+    number_available = ''
     review_rating = ''
     category = ''
     image_url = ''
@@ -54,7 +54,6 @@ def search_info_page(soup,url_site):
         if p is not None:
             product_description = p.text
 
-    # print(product_description)
     """
     Product Information
     - UPC
@@ -69,19 +68,14 @@ def search_info_page(soup,url_site):
         td = tr.find('td')
         if th.text == "UPC":
             universal_product_code = td.text
-            # break
         elif th.text == "Price (excl. tax)":
             price_excluding_tax = td.text
-            # break
         elif th.text == "Price (incl. tax)":
             price_including_tax = td.text
-            # break
         elif th.text == "Availability":
             number_available = td.text
-            # break
         elif th.text == "Number of reviews":
             review_rating = td.text
-            # break
 
     """
     Category
@@ -104,10 +98,10 @@ def search_info_page(soup,url_site):
         if alt == title:
             image_url = src.replace('../..', url_site)
 
-            #pour le nom de l'image
-            special_chars = ":/()#$%^*\"?\\<>|"
+            # pour le nom de l'image
+            special_chars = ":/()#$%^*\"\'?\\<>|"
             for special_char in special_chars:
-                title = title.replace(special_char,'-')
+                title = title.replace(special_char, '-')
 
             """Export de l'image dans le dossier de la catégorie concernée
             Pour la sauvegarde des fichiers images, 
@@ -119,10 +113,11 @@ def search_info_page(soup,url_site):
             if not os.path.exists('./Lists of Categories/' + category + '_pictures'):
                 os.mkdir('./Lists of Categories/' + category + '_pictures')
 
-            urllib.request.urlretrieve(image_url,'./Lists of Categories/' + category + '_pictures/'+title[0:19] +'....jpg')
+            urllib.request.urlretrieve(image_url,
+                                       './Lists of Categories/' + category + '_pictures/' + title[0:19] + '....jpg')
 
-    return title, product_description, universal_product_code, price_excluding_tax, price_including_tax, \
-           number_available, review_rating, category,image_url
+    return title, product_description, universal_product_code, price_excluding_tax, price_including_tax,\
+           number_available, review_rating, category, image_url
 
 
 if __name__ == '__main__':
@@ -132,8 +127,8 @@ if __name__ == '__main__':
 
     if response.ok:
         soup = BeautifulSoup(response.content, "html.parser")
-        title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available,\
-        review_rating, category, image_url = search_info_page(soup,url_site)
+        title, product_description, universal_product_code, price_excluding_tax, price_including_tax, number_available, \
+        review_rating, category, image_url = search_info_page(soup, url_site)
 
         """Pour création d'un fichier csv pour un livre
         Crée un csv avec les éléments du livre là où est executé le fichier
@@ -142,16 +137,11 @@ if __name__ == '__main__':
         special_chars = ":/()#$%^*"
         for special_char in special_chars:
             title = title.replace(special_char, '-')
-        with open('./Lists of Categories/'+title+'.csv', 'w', newline='',encoding='utf-8-sig') as fichier_csv:
-            writer = csv.writer(fichier_csv,delimiter=';',quotechar='"')
-            writer.writerow(['product_url_page','universal_product_code','title','price_including_tax',\
-                             'price_excluding_tax', 'number_available','category',\
-                            'review_rating','image_url','product_description'])
-            writer.writerow([url,universal_product_code,title,price_including_tax,\
-                             price_excluding_tax, number_available,category,\
-                             review_rating, image_url,product_description])
-
-
-
-
-
+        with open('./Lists of Categories/' + title + '.csv', 'w', newline='', encoding='utf-8-sig') as fichier_csv:
+            writer = csv.writer(fichier_csv, delimiter=';', quotechar='"')
+            writer.writerow(['product_url_page', 'universal_product_code', 'title', 'price_including_tax',
+                             'price_excluding_tax', 'number_available', 'category',
+                             'review_rating', 'image_url', 'product_description'])
+            writer.writerow([url, universal_product_code, title, price_including_tax,
+                             price_excluding_tax, number_available, category,
+                             review_rating, image_url, product_description])
