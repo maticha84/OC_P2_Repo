@@ -100,7 +100,7 @@ def search_info_page(soup, url_site):
             image_url = src.replace('../..', url_site)
 
             # pour le nom de l'image
-            special_chars = ":/()#$%^*\"\'?\\<>|"
+            special_chars = ":/()#$%^*\"\'’?\\<>|"
             for special_char in special_chars:
                 title = title.replace(special_char, '-')
 
