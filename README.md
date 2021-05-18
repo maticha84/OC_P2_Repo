@@ -82,7 +82,7 @@ Pour pouvoir utiliser le projet, il vous faudra au préalable récupérer l'int�
 - le dossier _books_
 - le fichier _\_\_init\_\_.py_ (qui est vierge)
 - le fichier _main.py_
-- le fichier _requirements.txt _
+- le fichier _requirements.txt_
 
 Dans un premier temps, vous devrez avoir installé si ce n'est pas encore le cas, les modules présents dans le fichier
 requirements.txt, dans votre environnement python. \
