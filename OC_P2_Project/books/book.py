@@ -73,7 +73,8 @@ def search_info_page(soup, url_site):
         elif th.text == "Price (incl. tax)":
             price_including_tax = td.text
         elif th.text == "Availability":
-            number_available = td.text
+            m = re.search(r'(?<=\()\d+',td.text)
+            number_available = m.group(0)
         elif th.text == "Number of reviews":
             review_rating = td.text
 
