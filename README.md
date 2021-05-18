@@ -85,7 +85,7 @@ Pour pouvoir utiliser le projet, il vous faudra au préalable récupérer l'int�
 - le fichier requirements.txt 
 
 Dans un premier temps, vous devrez avoir installé si ce n'est pas encore le cas, les modules présents dans le fichier
-requirements.txt. \
+requirements.txt, dans votre environnement python. \
 Ensuite, executez avec python le fichier main.py. A l'exécution du fichier _**main.py**_, plusieurs fichiers seront créés :
 - un dossier nommé **Lists of Categories** est créé là où sera exécuté le fichier _main.py_.
 - dans ce dossier, un fichier csv par catégorie est créé.
