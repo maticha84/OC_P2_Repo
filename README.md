@@ -79,10 +79,10 @@ d'execution de plus de 17 min à moins de 3 min.
 
 Pour pouvoir utiliser le projet, il vous faudra au préalable récupérer l'intégralité du dossier 
 **OC_P2_Projet**. Dans ce dossier, vous trouverez : 
-- le dossier books
-- le fichier __init__.py (qui est vierge)
-- le fichier main.py
-- le fichier requirements.txt 
+- le dossier _books_
+- le fichier ___init__.py_ (qui est vierge)
+- le fichier _main.py_
+- le fichier _requirements.txt _
 
 Dans un premier temps, vous devrez avoir installé si ce n'est pas encore le cas, les modules présents dans le fichier
 requirements.txt, dans votre environnement python. \
