@@ -80,7 +80,7 @@ d'execution de plus de 17 min à moins de 3 min.
 Pour pouvoir utiliser le projet, il vous faudra au préalable récupérer l'intégralité du dossier 
 **OC_P2_Projet**. Dans ce dossier, vous trouverez : 
 - le dossier _books_
-- le fichier ___init__.py_ (qui est vierge)
+- le fichier _\_\_init\_\_.py_ (qui est vierge)
 - le fichier _main.py_
 - le fichier _requirements.txt _
 
