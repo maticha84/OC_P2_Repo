@@ -115,25 +115,3 @@ def crea_csv_by_category(category, list_books, url_site, dico_for_csv):
                              quotechar='"', encoding='utf-8-sig')
 
     return export_csv
-
-
-if __name__ == '__main__':
-    # url_cat = 'http://books.toscrape.com/catalogue/category/books/mystery_3/index.html'
-    url_site = "http://books.toscrape.com"
-    url_category = 'http://books.toscrape.com/catalogue/category/books/travel_2/index.html'
-    response = requests.get(url_category)
-
-    if response.ok:
-        soup = BeautifulSoup(response.content, "html.parser")
-
-        category = search_info_category(soup)
-        list_books = search_tab_category(soup, url_category)
-
-    url = "http://books.toscrape.com/catalogue/eragon-the-inheritance-cycle-1_153/index.html"
-    # creadico
-    dico_for_csv = {'product_page_url': [], 'title': [], 'product_description': [], 'universal_product_code': [],
-                    'price_excluding_tax': [], 'price_including_tax': [], 'number_available': [], 'review_rating': [],
-                    'category': [], 'image_url': []}
-
-    # dico = crea_dico_for_csv(url_category, url_site, dico_for_csv)
-    crea_csv_by_category(category, list_books, url_site, dico_for_csv)
