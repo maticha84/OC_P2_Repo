@@ -8,7 +8,7 @@ from books import books_by_category as bbc
 class ParallelWorkGlobal(Thread):
     """
     Classe permettant la mise en place de parallèlisation entre les exécutions des différentes catégories.
-    queue : les urls à scapper, qui sont mises en file d'attente
+    queue : les urls à scrapper, qui sont mises en file d'attente
     urlsite : l'adresse url du site : "http://books.toscrape.com"
     """
 
