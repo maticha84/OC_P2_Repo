@@ -37,11 +37,3 @@ def result_main(url_site, url_category):
         cat.crea_csv_by_category(category, list_books, url_site, dico_for_csv)
         print('Category ' + category + ' ok !')
 
-
-if __name__ == '__main__':
-    url_site = "http://books.toscrape.com"
-    response = requests.get(url_site)
-
-    if response.ok:
-        soup_url_site = BeautifulSoup(response.content, 'html.parser')
-        print(research_all_category(url_site, soup_url_site))
