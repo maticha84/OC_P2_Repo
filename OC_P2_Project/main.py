@@ -25,11 +25,9 @@ import requests
 import os
 import time
 from bs4 import BeautifulSoup
-from threading import Thread
 from queue import Queue
 from books import parallel_work as pw
 from books import books_by_category as bbc
-from books import category as oc
 
 
 if not os.path.exists('./Lists of Categories'):
